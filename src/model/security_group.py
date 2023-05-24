@@ -1,5 +1,5 @@
 import logging
-from src.model.security_group_rule import SGR
+from model.security_group_rule import SGR
 
 class SG:
 	def __init__(self, item, cloud_name):

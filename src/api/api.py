@@ -1,9 +1,9 @@
 #/usr/bin/python3.10q
-import src.connectors.openstack_conector as openstack
+import connectors.openstack_conector as openstack
 import fastapi
-import src.api.cloud_gateway as cloud_gateway
+import api.cloud_gateway as cloud_gateway
 from starlette.responses import FileResponse 
-import src.api.db_gateway as db_gateway
+import api.db_gateway as db_gateway
 app = fastapi.FastAPI()
 import logging
 

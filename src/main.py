@@ -1,7 +1,7 @@
 # main.py
 import uvicorn
 import argparse
-import src.database.db as database
+import database.db as database
 import logging
 
 logging.basicConfig(filename='kube-connector.log',
@@ -33,10 +33,10 @@ def parseCliOptions():
 async def app(scope, receive, send):
 	...
 
-def main():
+if __name__ == "__main__":
 	logging.info("kube-connector started")
 	options = parseCliOptions()
 	port    = options["port"]
 	key		= options["key"]
 	database.create_database()
-	uvicorn.run("src.api.api:app", port=port, log_level="info")
+	uvicorn.run("api.api:app", port=port, log_level="info")

@@ -1,6 +1,6 @@
 
-import src.database.db as database
-from src.api.message import Message
+import database.db as database
+from api.message import Message
 import logging
 
 def add_cloud(req):

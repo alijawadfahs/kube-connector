@@ -1,8 +1,8 @@
 import openstack
 import yaml
-import src.database.db as database
-from src.model.server import Server
-from src.model.security_group import SG
+import database.db as database
+from model.server import Server
+from model.security_group import SG
 import logging
 
 def get_servers(cloud_name): 

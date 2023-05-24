@@ -1,8 +1,8 @@
 
-import src.database.db as database
-from src.api.message import Message
+import database.db as database
+from api.message import Message
 import logging
-import src.connectors.openstack_conector as openstack
+import connectors.openstack_conector as openstack
 
 CLOUD_SUP_TYPES={"openstack","aws"}
 ClOUD_OBG_PARAMETERS={"name", "type", "payload"}
