@@ -39,4 +39,4 @@ if __name__ == "__main__":
 	port    = options["port"]
 	key		= options["key"]
 	database.create_database()
-	uvicorn.run("api.api:app", port=port, log_level="info")
+	uvicorn.run("api.api:app", port=port, log_level="info",host="0.0.0.0")
