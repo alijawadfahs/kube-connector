@@ -1,7 +1,7 @@
 # main.py
 import uvicorn
 import argparse
-import database.db as database
+import src.database.db as database
 import logging
 
 logging.basicConfig(filename='kube-connector.log',
@@ -39,4 +39,4 @@ if __name__ == "__main__":
 	port    = options["port"]
 	key		= options["key"]
 	database.create_database()
-	uvicorn.run("api.api:app", port=port, log_level="info",host="0.0.0.0")
+	uvicorn.run("src.api.api:app", port=port, log_level="info",host="0.0.0.0")

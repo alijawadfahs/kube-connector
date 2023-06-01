@@ -1,8 +1,8 @@
 import openstack
 import yaml
-import database.db as database
-from model.server import Server
-from model.security_group import SG
+import src.database.db as database
+from src.model.server import Server
+from src.model.security_group import SG
 import logging
 
 def get_servers(cloud_name): 
@@ -12,7 +12,7 @@ def get_servers(cloud_name):
 	l=[server.to_dict() for server in conn.compute.servers()]
 	servers=[]
 	for item in l:
-		server = Server(item,cloud_name)
+		server = Server(item,cloud_name,"openstack")
 		servers.append(server)
 	return servers
 
@@ -23,7 +23,7 @@ def get_security_groups(cloud_name):
 	security_groups = []
 	json_security_groups=conn.network.security_groups()
 	for json_security_group in json_security_groups: 
-		security_group=SG(json_security_group,cloud_name)
+		security_group=SG(json_security_group, cloud_name, "openstack")
 		security_groups.append(security_group)
 	return security_groups
 

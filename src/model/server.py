@@ -1,10 +1,10 @@
 import logging
 
 class Server: 
-	def __init__(self,item,cloud_name):
+	def __init__(self,item, cloud_name, provider_type):
 		self.name = item["name"]
 		self.id = item["id"]
-		self.provider = "openstack" 
+		self.provider_type = provider_type
 		self.provider_name = cloud_name 
 		self.region = item["location"]["region_name"]
 		self.status = item["status"]

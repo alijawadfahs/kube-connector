@@ -1,9 +1,9 @@
-#/usr/bin/python3.10q
-import connectors.openstack_conector as openstack
+#/usr/bin/python3.10
+import src.connectors.openstack_conector as openstack
 import fastapi
-import api.cloud_gateway as cloud_gateway
+import src.api.cloud_gateway as cloud_gateway
 from starlette.responses import FileResponse 
-import api.db_gateway as db_gateway
+import src.api.db_gateway as db_gateway
 app = fastapi.FastAPI()
 import logging
 
@@ -94,8 +94,21 @@ async def create_db(info : fastapi.Request):
 	m = db_gateway.create_database()
 	return m
 
+@app.post("/add_to_cluster")
+async def create_db(info : fastapi.Request):
+	logging.info("/add_to_cluster is called")
+	req = await info.json()
+	m = cloud_gateway.add_to_cluster(req)
+	return m
+
 @app.delete("/clear_db")
 async def clear_db(info : fastapi.Request):
 	logging.info("/clear DB is called")
 	m = db_gateway.clear_database()
+	return m
+
+@app.delete("/clear_sg_db")
+async def clear_db(info : fastapi.Request):
+	logging.info("/clear_sg_db is called")
+	m = db_gateway.clear_sg_db()
 	return m

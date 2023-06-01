@@ -1,6 +1,6 @@
 
-import database.db as database
-from api.message import Message
+import src.database.db as database
+from src.api.message import Message
 import logging
 
 def add_cloud(req):
@@ -50,6 +50,17 @@ def clear_database():
 	m = Message()
 	try:
 		database.clear_database()	
+		m.status = "SUCCESS!"
+	except Exception as e:
+		m.status = "Failed"
+		m.reply = "DB was not cleared!"
+		logging.error("DB was not cleared with the following error: \"" + str(e) + "\"" )
+	return m.cast_dict()
+
+def clear_sg_db():
+	m = Message()
+	try:
+		database.clear_sg_db()	
 		m.status = "SUCCESS!"
 	except Exception as e:
 		m.status = "Failed"

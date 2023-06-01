@@ -1,8 +1,8 @@
 
-import database.db as database
-from api.message import Message
+import src.database.db as database
+from src.api.message import Message
 import logging
-import connectors.openstack_conector as openstack
+import src.connectors.openstack_conector as openstack
 
 CLOUD_SUP_TYPES={"openstack","aws"}
 ClOUD_OBG_PARAMETERS={"name", "type", "payload"}
@@ -147,6 +147,47 @@ def open_ip(req):
 		m.status = "SUCCESS!"
 		m.data = added_rules
 	return m.cast_dict()
+
+def add_to_cluster(req): 
+	m = Message()
+	if "ip" not in req.keys(): 
+		m.reply= "the request does not have the ip!"
+	else: 
+		server_query=database.get_server_by_ip(req["ip"])
+		if not len(server_query): 
+			m.reply= "the ip address does not exist"
+		else:
+			
+			server          = server_query[0]
+			print(server)
+			server_ip       = server["address"]			
+			server_sg       = database.get_server_sg(server)
+			server_provider_name = server["provider_name"]
+			server_provider_type = server["provider_type"]
+			registered_ip_set  = database.get_cluster_ips()
+			registered_sg_set  = database.get_cluster_sgs()
+			
+			# open all the registered ips of the cluster to the newly added server
+			for ip in registered_ip_set: 
+				open_ip_req={}
+				open_ip_req["type"]=server_provider_type
+				open_ip_req["provider"]=server_provider_name
+				open_ip_req["sg_id"]=server_sg["id"]
+				open_ip_req["ip"]=ip
+				open_ip(open_ip_req)
+
+			# open the newly added server ip in all the registered servers
+			for sg in registered_sg_set: 
+				open_ip_req={}
+				open_ip_req["type"]=sg["provider_type"]
+				open_ip_req["provider"]=sg["provider_name"]
+				open_ip_req["sg_id"]=sg["id"]
+				open_ip_req["ip"]=server_ip
+				open_ip(open_ip_req)
+
+			database.add_ip_to_cluster(server)
+			database.add_sg_to_cluster(server,server_sg)
+	return m
 
 def verify_req(req,m): 
 	if not ClOUD_OBG_PARAMETERS == set(req.keys()): 

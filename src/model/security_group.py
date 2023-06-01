@@ -1,15 +1,16 @@
 import logging
-from model.security_group_rule import SGR
+from src.model.security_group_rule import SGR
 
 class SG:
-	def __init__(self, item, cloud_name):
+	def __init__(self, item, cloud_name, cloud_type):
 		self.name = item["name"]
 		self.id = item["id"]
 		self.description = item["description"]
 		self.rules=self._create_rules(item["security_group_rules"], cloud_name)
 		self.created_at = item["created_at"]
 		self.revision_number = item["revision_number"]
-		self.provider = cloud_name
+		self.provider_name = cloud_name
+		self.provider_type = cloud_type
 
 	def _create_rules(self, json_rules, cloud_name):
 		rules = []
