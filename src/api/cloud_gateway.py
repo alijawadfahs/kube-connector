@@ -26,7 +26,11 @@ def add_cloud(req):
 				pass
 				# funtion to be implemented
 		database.add_cloud_item(req)
-	if m.reply == "": 
+	if m.reply == "":
+		# TODO: improve this and check for failures on get servers and get securuity groups
+		newreq={"name":req["name"],"type":req["type"]}
+		get_servers(newreq)
+		get_security_groups(newreq)
 		m.status = "SUCCESS!"		
 	return m.cast_dict()
 
@@ -157,9 +161,7 @@ def add_to_cluster(req):
 		if not len(server_query): 
 			m.reply= "the ip address does not exist"
 		else:
-			
 			server          = server_query[0]
-			print(server)
 			server_ip       = server["address"]			
 			server_sg       = database.get_server_sg(server)
 			server_provider_name = server["provider_name"]
