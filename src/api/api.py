@@ -27,9 +27,16 @@ async def add_cloud(info : fastapi.Request):
 
 @app.get("/get_servers")
 async def get_servers(info : fastapi.Request):
-	logging.info("/servers is called")
+	logging.info("/get_servers is called")
 	req = await info.json()
 	m=cloud_gateway.get_servers(req)
+	return m
+
+@app.post("/update_servers")
+async def get_servers(info : fastapi.Request):
+	logging.info("/update_servers is called")
+	req = await info.json()
+	m=cloud_gateway.update_servers(req)
 	return m
 
 @app.get("/get_security_groups")
@@ -39,7 +46,7 @@ async def get_security_groups(info : fastapi.Request):
 	m = cloud_gateway.get_security_groups(req)
 	return m
 
-@app.get("/update_security_groups")
+@app.post("/update_security_groups")
 async def update_security_groups(info : fastapi.Request):
 	logging.info("/update_security_groups is called")
 	req = await info.json()
