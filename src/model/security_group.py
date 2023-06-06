@@ -2,20 +2,31 @@ import logging
 from src.model.security_group_rule import SGR
 
 class SG:
-	def __init__(self, item, cloud_name, cloud_type):
-		self.name = item["name"]
-		self.id = item["id"]
-		self.description = item["description"]
-		self.rules=self._create_rules(item["security_group_rules"], cloud_name)
-		self.created_at = item["created_at"]
-		self.revision_number = item["revision_number"]
-		self.provider_name = cloud_name
-		self.provider_type = cloud_type
+	def __init__(self, sg_item, provider_name, provider_type):
+		self.provider_name = provider_name
+		self.provider_type = provider_type
+		
+		match provider_type:
+			case "openstack": 
+				self.name = sg_item["name"]
+				self.id = sg_item["id"]
+				self.description = sg_item["description"]
+				self.rules=self._create_rules(sg_item["security_group_rules"], provider_name, provider_type)
+				self.created_at = sg_item["created_at"]
+				self.revision_number = sg_item["revision_number"]
 
-	def _create_rules(self, json_rules, cloud_name):
+			case "aws": 
+				self.name = sg_item["GroupName"]
+				self.id = sg_item["GroupId"]
+				self.description = sg_item["Description"]
+				self.rules=self._create_rules(sg_item["IpPermissions"], provider_name, provider_type)
+				self.vpc_id = sg_item["VpcId"]
+				self.owner_id = sg_item["OwnerId"]
+
+	def _create_rules(self, dict_rules,  provider_name, provider_type):
 		rules = []
-		for json_rule in json_rules: 
-			rule = SGR(json_rule, self.name, cloud_name)
+		for dict_rule in dict_rules: 
+			rule = SGR(dict_rule, self.name, self.id, provider_name, provider_type)
 			rules.append(rule)
 		return rules
 

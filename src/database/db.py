@@ -1,6 +1,6 @@
 from tinydb import TinyDB, Query
 import os
-DIR="./DB/Store"
+DIR="./DB"
 FILES=["Clouds.json", "Tokens.json", "IPs.json", "Servers.json", "Security_Groups.json", "Cluster.json"]
 import logging
 
@@ -77,6 +77,12 @@ def get_sg_ids():
 	security_groups=load_security_groups()
 	security_groups_table=security_groups.table("Security_Groups")
 	out=[sg["id"] for sg in security_groups_table.all()]
+	return out
+
+def get_server_ids():
+	servers=load_servers()
+	servers_table=servers.table("Servers")
+	out=[server["id"] for server in servers_table.all()]
 	return out
 
 def add_kubernetes_token(token):

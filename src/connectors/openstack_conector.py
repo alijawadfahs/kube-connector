@@ -5,7 +5,8 @@ from src.model.server import Server
 from src.model.security_group import SG
 import logging
 
-def get_servers(cloud_name): 
+def get_servers(cloud_name):
+	# TODO collect only running servers 
 	openstack.enable_logging(debug=True, path='openstack.log')
 	# Initialize connection
 	conn = openstack.connect(cloud=cloud_name)
@@ -16,24 +17,24 @@ def get_servers(cloud_name):
 		servers.append(server)
 	return servers
 
-def get_security_groups(cloud_name):
+def get_security_groups(provider_name):
 	openstack.enable_logging(debug=True, path='openstack.log')
 	# Initialize connection
-	conn = openstack.connect(cloud=cloud_name)
+	conn = openstack.connect(cloud=provider_name)
 	security_groups = []
-	json_security_groups=conn.network.security_groups()
-	for json_security_group in json_security_groups: 
-		security_group=SG(json_security_group, cloud_name, "openstack")
+	sg_items = conn.network.security_groups()
+	for sg_item in sg_items: 
+		security_group = SG(sg_item, provider_name, "openstack")
 		security_groups.append(security_group)
 	return security_groups
 
-def create_security_group(cloud_name,sg_name):
+def create_security_group(provider_name,sg_name):
 	openstack.enable_logging(debug=True, path='openstack.log')
-	conn = openstack.connect(cloud=cloud_name)
+	conn = openstack.connect(cloud=provider_name)
 	security_group = conn.network.create_security_group(name = sg_name, description = "Kube-connector generated security group" )
 	return security_group
 
-def open_ip(cloud_name,sg_id,ip):
+def open_ip(provider_name,sg_id,ip):
 	port={
 		"direction" : "ingress",
 		"ip" : f"{ip}/32",
@@ -43,20 +44,20 @@ def open_ip(cloud_name,sg_id,ip):
 		"ethertype" : "IPv4"
 	}
 	added_rules=[]
-	added_rules.append(open_port(cloud_name,sg_id,port))
+	added_rules.append(open_port(provider_name, sg_id, port))
 
 	port["protocol"] = "udp"
-	added_rules.append(open_port(cloud_name,sg_id,port))
+	added_rules.append(open_port(provider_name, sg_id, port))
 	port["protocol"] = "icmp"
 	port["port_range_max"] = None
 	port["port_range_min"] = None
-	added_rules.append(open_port(cloud_name,sg_id,port))
+	added_rules.append(open_port(provider_name, sg_id, port))
 	return added_rules
 	
 
-def open_port(cloud_name,sg_id,port):
+def open_port(provider_name, sg_id, port):
 	openstack.enable_logging(debug=True, path='openstack.log')
-	conn = openstack.connect(cloud=cloud_name)
+	conn = openstack.connect(cloud = provider_name)
 	added_rule = conn.network.create_security_group_rule(
 		security_group_id	= sg_id,
 		direction			= port["direction"],

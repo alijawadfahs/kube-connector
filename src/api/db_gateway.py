@@ -71,16 +71,16 @@ def clear_sg_db():
 def get_security_group(req):
 	m = Message()
 	try:
-		sg = database.get_security_group(req["name"])
+		sg = database.get_security_group(req["sg_name"])
 		if sg:
 			m.status	= "SUCCESS!"
 			m.data		= sg[0]
 		else: 
 			m.status	= "Failed"
-			m.reply 	= "The requested security group %s was not found!" % req["name"]
+			m.reply 	= "The requested security group %s was not found!" % req["sg_name"]
 	except  Exception as e:
 		m.status = "Failed"
-		m.reply = "Error encountered when trying to reterieve the security group %s." % req["name"]
+		m.reply = "Error encountered when trying to reterieve the security group %s." % req["sg_name"]
 		logging.exception(e)
 	return m.cast_dict()
 
