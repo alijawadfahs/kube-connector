@@ -39,8 +39,8 @@ def open_ip(provider_name,sg_id,ip):
 		"direction" : "ingress",
 		"ip" : f"{ip}/32",
 		"protocol" : "tcp",
-		"port_range_max" : 65534,
 		"port_range_min" : 1,
+		"port_range_max" : 65534,
 		"ethertype" : "IPv4"
 	}
 	added_rules=[]
@@ -53,7 +53,6 @@ def open_ip(provider_name,sg_id,ip):
 	port["port_range_min"] = None
 	added_rules.append(open_port(provider_name, sg_id, port))
 	return added_rules
-	
 
 def open_port(provider_name, sg_id, port):
 	openstack.enable_logging(debug=True, path='openstack.log')

@@ -58,8 +58,8 @@ def open_ip(provider_name,sg_id,ip):
 		"direction" : "ingress",
 		"ip" : f"{ip}/32",
 		"protocol" : "-1",
-		"port_range_max" : 65535,
 		"port_range_min" : 0,
+		"port_range_max" : 65535
 	}
 	added_rules=[]
 	added_rules.append(open_port(provider_name, sg_id, port))
