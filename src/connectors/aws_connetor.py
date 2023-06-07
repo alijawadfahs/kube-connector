@@ -57,19 +57,11 @@ def open_ip(provider_name,sg_id,ip):
 	port={
 		"direction" : "ingress",
 		"ip" : f"{ip}/32",
-		"protocol" : "tcp",
-		"port_range_max" : 65534,
-		"port_range_min" : 1,
-		"ethertype" : "IPv4"
+		"protocol" : "-1",
+		"port_range_max" : 65535,
+		"port_range_min" : 0,
 	}
 	added_rules=[]
-	added_rules.append(open_port(provider_name, sg_id, port))
-
-	port["protocol"] = "udp"
-	added_rules.append(open_port(provider_name, sg_id, port))
-	port["protocol"] = "icmp"
-	port["port_range_max"] = 1
-	port["port_range_min"] = 1
 	added_rules.append(open_port(provider_name, sg_id, port))
 	return added_rules
 
